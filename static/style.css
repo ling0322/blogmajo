@@ -245,7 +245,7 @@ img[align="left"] {
 	font-size: 1.1em;
 	line-height: 1.8em;
 	text-align: justify;
-	word-wrap:break-word;
+	word-wrap:break-all;
 }
 .entry-title, .entry-title a, .entry-title a:visited,
 h2, h2 a, h2 a:visited,

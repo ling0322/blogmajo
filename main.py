@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 
+# solve the default encoding problem
+import sys 
+reload(sys) 
+sys.setdefaultencoding("utf-8") 
+
+
 import tornado.ioloop
 import tornado.web
 import os
@@ -312,10 +318,16 @@ class Remove(MeidoBaseHandler):
         
     @tornado.web.authenticated
     def post(self):
-        next_page = self.get_argument('next')
+        next_page = escape.url_unescape(self.get_argument('next'))
         entry_id = int(self.get_argument('id'))
         meidodb.delete_entry(entry_id)
-        self.redirect(escape.url_unescape(next_page))
+        
+        # if next page is the blog just removed, jump to /
+        
+        if next_page.find('/blog/') != -1:
+            self.redirect('/')
+        else:
+            self.redirect(escape.url_unescape(next_page))
         
         
 

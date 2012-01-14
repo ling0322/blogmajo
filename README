@@ -3,9 +3,11 @@ Blogmeido (blog妹抖) is a tiny blogging tool and manage system. using the Bell
 $python main.py
 Open a broswer, type localhost:8888 in the address bar, then you could find it.
 
+Contact me if you have any questions or suggestions. I need your help!
+
 Requirement:
     Python 2.7+
     Tornado 2.2.x
 
 Notice:
-    You should change the cookies_secret in settings.
+    You should change the cookies_secret in settings while in use!
