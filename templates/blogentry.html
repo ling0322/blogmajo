@@ -1,0 +1,25 @@
+<div class="post">
+  <div class="post-title">
+    <div class="post-date">
+      <span class="post-day">{{ date }}</span>
+      <span class="post-month">{{ month }}</span>
+    </div>
+    <h2 class="entry-title">
+      <a href="{{ 'blog/' + str(blog['id']) }}" rel="bookmark" title="Permanent Link to Test">{{ blog['title'] }}</a>
+    </h2>
+    <div class="post-info"> {{ author }} | Category: 
+      <span class="entry-categories">
+        <a href="/category/{{ blog['base64-category'] }}" rel="category">{{ blog['category'] }}</a>
+      </span>
+      {% if current_user != None %}
+       | <a href="/remove?id={{ blog['id'] }}&next={{ url_escape(request.uri) }}" rel="category"> Remove </a>
+       | <a href="/modify?q=modify&id={{ blog['id'] }}"> Modify </a>
+      {% end %}
+    </div>
+    <div style="clear:both;"></div>
+  </div>
+  <div class="post-tags"></div>
+  <div class="entry">
+      {% raw blog['content'] %}
+  </div>
+</div>

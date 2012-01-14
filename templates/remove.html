@@ -1,0 +1,9 @@
+<h2>Remove:</h2>
+<p> Are you sure to remove this blog '{{ entry['title'] }}'? </p>
+<form action="remove" method="post" id ="removeform">
+  <p>
+    <input name="submit" id="submit" type="submit" tabindex="4" value="OK">
+    <input name="id" id="id" type="hidden" value="{{ entry_id }}">
+    <input name="next" id="next" type="hidden" value="{{ next }}">
+  </p>
+</form>

@@ -1,0 +1,21 @@
+{% if category != None %}
+<h2>Category '{{ category }}':</h2>
+{% end %}
+{% if post_date != None %}
+<h2>Blogs posted in '{{ post_date }}':</h2>
+{% end %}
+{% for blog in blogentries %}
+  {% module BlogEntry(blog) %}
+{% end %}
+<div class="navigation">
+  <span class="previous-entries">
+    {% if page > 0 %}
+    <a href="?page={{ page - 1 }}">&laquo; Previous Page</a>
+    {% end %}
+  </span>
+  <span class="next-entries">
+    {% if page < pages_max %}
+    <a href="?page={{ page + 1 }}">Next Page &raquo;</a>
+    {% end %}
+  </span>
+</div>

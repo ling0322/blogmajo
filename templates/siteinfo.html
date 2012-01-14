@@ -1,0 +1,16 @@
+<h2>Site Informations:</h2>
+<form action="siteinfo" method="post" id ="loginform">
+  <p><label>Title</label></p>
+  <p><input type="text" name="title" id="title" value="{{ title }}" size="28" tabindex="4"></p>
+  <p><label>Description</label></p>
+  <p><input type="text" name="description" id="description" value="{{ description }}" size="28" tabindex="4"></p>
+  <p><label>Auther Name (Username)</label></p>
+  <p><input type="text" name="username" id="username" value="{{ username }}" size="28" tabindex="4"></p>
+  <p><label>Password</label></p>
+  <p><input type="password" name="password" id="password" value="{{ password }}" size="28" tabindex="4"></p>
+  <p><label>Password (Confirm)</label></p>
+  <p><input type="password" name="password-confirm" id="password-confirm" value="{{ password }}" size="28" tabindex="4"></p>
+  <p><label>Links - Using BBCode ([url] Tag) different links separated by new line.</label></p>
+  <p><textarea name="links" id="links" cols="60" rows="10" tabindex="4">{{ links }}</textarea></p>
+  <p><input name="submit" id="submit" type="submit" tabindex="5" value="submit"></p>
+</form>
