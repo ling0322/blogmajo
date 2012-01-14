@@ -1,0 +1,11 @@
+Blogmeido (blog√√∂∂) is a tiny blogging tool and manage system. using the Belle (http://www.getbelle.com) Theme of wordpress. And rewrite it in Python + Tornado web server.
+
+$python main.py
+Open a broswer, type localhost:8888 in the address bar, then you could find it.
+
+Requirement:
+    Python 2.7+
+    Tornado 2.2.x
+
+Notice:
+    You should change the cookies_secret in settings.
