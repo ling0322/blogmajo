@@ -1,4 +1,4 @@
-Blogmeido (blog√√∂∂) is a tiny blogging tool and manage system. using the Belle (http://www.getbelle.com) Theme of wordpress. And rewrite it in Python + Tornado web server.
+Blogmeido (blogÂ¶πÊäñ) is a tiny blogging tool and manage system. using the Belle (http://www.getbelle.com) Theme of wordpress. And rewrite it in Python + Tornado web server.
 
 $python main.py
 Open a broswer, type localhost:8888 in the address bar, then you could find it.
