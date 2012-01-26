@@ -13,7 +13,7 @@ import atexit
 
 def _table_is_exist(table_name):
     ''' 
-    modify a entry
+    modify a entry 
     create_time area of argument entry is never used
     '''
     
