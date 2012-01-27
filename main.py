@@ -171,7 +171,7 @@ class Logout(MeidoBaseHandler):
 class Comment(MeidoBaseHandler):
     ''' create a new comment '''
     
-    def post(self):
+    def post(self): 
         author = self.get_argument("author", None)
         email = self.get_argument("email", "")
         url = self.get_argument("url", "")
