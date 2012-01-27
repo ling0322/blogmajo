@@ -26,8 +26,10 @@ class BlogEntry(tornado.web.UIModule):
         blog['content'] = bbcode_conv.bb2html(blog['content'])
         blog['base64-category'] = self.base64_encode(blog['category'])
         author = meidodb.get_siteinfo('username')
+        comments_count = len(meidodb.get_comment_by_entry(blog['id']))
         return self.render_string(
-            "blogentry.html", 
+            "blogentry.html",
+            comments_count = comments_count, 
             blog = blog, 
             author = author,
             date = time.strftime('%d', blog['create_time']),

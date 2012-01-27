@@ -276,7 +276,7 @@ class Modify(MeidoBaseHandler):
         else:
             entry['category'] = self.get_argument('category-new')
             
-        entry['content'] = self.get_argument('content')
+        entry['content'] = self.get_argument('entry-content')
         entry['create_time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
         
         # id != -1 is to modify an exist entry just remove it and create a new

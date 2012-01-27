@@ -15,6 +15,11 @@
        | <a href="/remove?type=entry&id={{ blog['id'] }}&next={{ url_escape(request.uri) }}" rel="category"> Remove </a>
        | <a href="/modify?q=modify&id={{ blog['id'] }}"> Modify </a>
       {% end %}
+      {% if comments_count == 0 %}
+       | No Comments
+      {% else %}
+       | {{ comments_count }} Comments
+      {% end %}
     </div>
     <div style="clear:both;"></div>
   </div>
