@@ -16,6 +16,10 @@ body {
        font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Helvetica, Arial, sans-serif;
 	font-size:12px;
 	} 
+p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 a {
 	text-decoration: none;
 }
@@ -582,14 +586,6 @@ h2 a:visited{
 	color: #41add9;
 }
 
-::selection {
-	color: #0d62aa; /* Safari */
-	background:#ffffff;
-	}
-::-moz-selection {
-	color: #71c2e3; /* Firefox */
-	background:#ffffff;
-}
 #headerimg a, #headerimg a:visited{
 	color:#41add9;
 }

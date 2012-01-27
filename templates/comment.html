@@ -1,0 +1,24 @@
+<li class="comment even thread-even depth-1" id="comment-{{ comment['id'] }}">
+  <div class="comment-body">
+    <div class="comment-author vcard">
+      <cite class="fn">
+      {% if comment['url'] == '' %}
+      {{ comment['name'] }}
+      {% else %}
+      <a href="{{ comment['url'] }}">{{ comment['name'] }}</a>
+      {% end %}
+      </cite> 
+      <span class="says">says:</span>
+    </div>
+    <div class="comment-meta commentmetadata">
+      <a href="#comment-{{ comment['id'] }}">{{ time }}</a>
+      {% if current_user != None %}
+      | {% if comment['email'] != '' %}Email: {{ comment['email'] }} |{% end %}
+      <a href="/remove?type=comment&id={{ comment['id'] }}&next={{ url_escape(request.uri) }}"> Remove </a>
+      {% end %}
+    </div>
+    {% for paragraph in comment['content'].split('\n') %}
+    <p>{{ paragraph }}</p>
+    {% end %}
+  </div>
+</li>

@@ -24,14 +24,15 @@ class bbcode(singleton.singleton):
         self.tags.append((re.compile(r'\[img\](.*)\[/img\]'), r'<img src="\1" />'))
         self.tags.append((re.compile(r'\[size=([0-9]*)\](.*)\[/size\]'), r'<span style="font-size:\1px">\2</span>'))
         self.tags.append((re.compile(r'\[color=(.*)\](.*)\[/color\]'), r'<span style="color:\1;">\2</span>'))
-        self.tags.append((re.compile('\n'), r'<br />'))
         
     def bb2html(self, bb2code):
-        r = bb2code
-        for tag in self.tags:
-            r = re.sub(tag[0], tag[1], r)
-        
-        return r
+        html_paragraphs = []
+        for paragraph in bb2code.split('\n'):
+            html = paragraph
+            for tag in self.tags:
+                html = re.sub(tag[0], tag[1], html)
+            html_paragraphs.append('<p>' + html + '</p>')
+        return ''.join(html_paragraphs)
         
     
     

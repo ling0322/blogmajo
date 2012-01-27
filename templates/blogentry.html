@@ -12,7 +12,7 @@
         <a href="/category/{{ blog['base64-category'] }}" rel="category">{{ blog['category'] }}</a>
       </span>
       {% if current_user != None %}
-       | <a href="/remove?id={{ blog['id'] }}&next={{ url_escape(request.uri) }}" rel="category"> Remove </a>
+       | <a href="/remove?type=entry&id={{ blog['id'] }}&next={{ url_escape(request.uri) }}" rel="category"> Remove </a>
        | <a href="/modify?q=modify&id={{ blog['id'] }}"> Modify </a>
       {% end %}
     </div>

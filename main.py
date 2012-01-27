@@ -15,6 +15,7 @@ import uimodules
 import meidodb
 import base64
 import hashlib
+import uuid
 
 class MeidoBaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
@@ -141,17 +142,22 @@ class Login(MeidoBaseHandler):
     ''' login page '''
      
     def get(self):
+        
+        # if login success go to the page specified by next
+        
+        next_url = self.get_argument('next', '/')
         self._meido_render(
             content_type = 'login', 
-            kwargs = dict())
+            kwargs = dict(next = next_url))
         
         
     def post(self):
         username = self.get_argument('username')
+        next_url = escape.url_unescape(self.get_argument('next'))
         sha256_password = hashlib.sha256(self.get_argument('password')).hexdigest()
         if username == meidodb.get_siteinfo('username') and sha256_password == meidodb.get_siteinfo('password'):
             self.set_secure_cookie('user', 'ling0322');
-            self.redirect('/')
+            self.redirect(next_url)
         else:
             self.redirect('/message?m=用户名密码错了呢> <')     
 
@@ -161,6 +167,49 @@ class Logout(MeidoBaseHandler):
     def get(self):
         self.clear_all_cookies()
         self.redirect('/')
+
+class Comment(MeidoBaseHandler):
+    ''' create a new comment '''
+    
+    def post(self):
+        author = self.get_argument("author", None)
+        email = self.get_argument("email", "")
+        url = self.get_argument("url", "")
+        content = self.get_argument("comment", None)
+        comment_time = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+        entry_id = self.get_argument('entry_id')
+
+        # if this comment is commented by master, use the master's name 
+        
+        if self.current_user != None:
+            author = meidodb.get_siteinfo('username')
+       
+        # check the parameters
+        
+        if self.current_user == None and author.upper() == meidodb.get_siteinfo('username').upper():
+            self.redirect('/message?m=乃不能用UP主的名字啊 (摇头ing')
+            return
+        if author == None:
+            self.redirect('/message?m=名字不能为空呢~')
+            return
+        if content == None:
+            self.redirect('/message?m=评论的内容呢 (盯~~~')
+            return
+               
+        comment = dict(
+            name = author,
+            email = email,
+            url = url,
+            content = content,
+            comment_time = comment_time,
+            entry_id = entry_id
+            )
+        
+        meidodb.create_comment(comment)
+        self.redirect('/blog/' + str(entry_id))
+        
+            
+            
 
 class Modify(MeidoBaseHandler):
     
@@ -304,38 +353,54 @@ class Remove(MeidoBaseHandler):
         
         # next argument is where this page comes from
 
-        entry_id = int(self.get_argument('id'))
-        entry = meidodb.get_entry(entry_id)
+        type = self.get_argument('type')
+        id = int(self.get_argument('id'))
+        if type == 'entry':
+            item = meidodb.get_entry(id)
+        elif type == 'comment':
+            item = meidodb.get_comment_by_id(id)
+            
         next_page = self.get_argument('next')
         
         
         self._meido_render(
             content_type = 'remove', 
             kwargs = dict(
-                entry = entry,
-                entry_id = entry_id,
+                type = self.get_argument('type'),
+                item = item,
+                id = id,
                 next = next_page))
         
     @tornado.web.authenticated
     def post(self):
         next_page = escape.url_unescape(self.get_argument('next'))
-        entry_id = int(self.get_argument('id'))
-        meidodb.delete_entry(entry_id)
+        id = int(self.get_argument('id'))
+        type = self.get_argument('type')
+        if type == 'entry':
+            meidodb.delete_entry(id)
+            meidodb.delete_comment_by_entry(id)
+        elif type == 'comment':
+            meidodb.delete_comment_by_id(id)
         
         # if next page is the blog just removed, jump to /
         
-        if next_page.find('/blog/') != -1:
+        if type == 'entry' and next_page.find('/blog/') != -1:
             self.redirect('/')
         else:
             self.redirect(escape.url_unescape(next_page))
         
         
 
+# create a random cookie secret
+
+cookie_secret = str(uuid.uuid4())
+print "cookie secret is : {0} \n".format(cookie_secret)
+
 settings = {
     "ui_modules": uimodules,
     "static_path": os.path.join(os.path.dirname(__file__), "static"),
     "template_path": os.path.join(os.path.dirname(__file__), "templates"),
-    "cookie_secret": "-w-i-t-c-h-",
+    "cookie_secret": cookie_secret,
     "login_url": "/login",
 }
 
@@ -349,6 +414,7 @@ application = tornado.web.Application([
     (r"/remove", Remove),
     (r"/login", Login),
     (r"/logout", Logout),
+    (r"/comment", Comment),
     (r"/siteinfo", SiteInfo),
     (r"/static/(.+)", tornado.web.StaticFileHandler, dict(path=settings['static_path'])),
 ], **settings)

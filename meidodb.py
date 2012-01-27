@@ -36,7 +36,7 @@ def _create_table_entry():
     c = conn.cursor()
     c.execute("""
         create table entry(
-            id integer primary key asc, 
+            id integer primary key asc,
             category varchar(32), 
             create_time datetime,
             title text,
@@ -45,7 +45,6 @@ def _create_table_entry():
     c.close()
 
 def _create_table_siteinfo():
-    conn = sqlite3.connect('entriesdb')
     c = conn.cursor()
     c.execute(
         """
@@ -56,8 +55,118 @@ def _create_table_siteinfo():
     conn.commit()
     c.close()
 
+def _create_table_comment():
+    c = conn.cursor()
+    c.execute(
+        """
+        create table comment(
+            id integer primary key,
+            entry_id integer,
+            name text,
+            email text,
+            url text,
+            content text,
+            comment_time datetime);
+        """)
+    conn.commit()
+    c.close()
+    
+def create_comment(comment):
+    ''' insert an new comment into table '''
+    
+    c = conn.cursor()
+    c.execute(
+        """
+        insert into comment(entry_id, name, email, content, comment_time, url) 
+        values(?, ?, ?, ?, ?, ?)
+        """, (
+            comment['entry_id'],
+            comment['name'],
+            comment['email'],
+            comment['content'],
+            comment['comment_time'],
+            comment['url']))
+    
+    conn.commit()
+    c.close()    
+
+def delete_comment_by_id(id):
+    ''' remove an comment by its id '''
+    
+    c = conn.cursor()
+    c.execute("""delete from comment where id = ?""", (id, ));
+    conn.commit()
+    c.close()
+
+def delete_comment_by_entry(entry_id):
+    ''' remove comments of an entry '''
+    
+    c = conn.cursor()
+    c.execute("""delete from comment where entry_id = ?""", (entry_id, ));
+    conn.commit()
+    c.close()
+
+def get_recent_comments(limit):
+    ''' get an comment by its id '''
+    
+    c = conn.cursor()
+    c.execute(
+        """
+        select id, entry_id, name, email, content, comment_time, url 
+        from comment 
+        order by id desc
+        limit ?
+        """, (limit, ));
+    
+    # if the comment didn't exist, return None 
+    
+    all_data = c.fetchall()
+    r = [_raw_data_to_comment_dict(raw_entry) for raw_entry in all_data]
+        
+    conn.commit()
+    c.close()
+    return r
+
+def get_comment_by_id(id):
+    ''' get an comment by its id '''
+    
+    c = conn.cursor()
+    c.execute("""select id, entry_id, name, email, content, comment_time, url from comment where id = ?""", (id, ));
+    
+    # if the comment didn't exist, return None 
+    
+    all_data = c.fetchall()
+    if len(all_data) == 0:
+        r = None
+    else:
+        r = _raw_data_to_comment_dict(all_data[0])
+        
+    conn.commit()
+    c.close()
+    return r
+
+def get_comment_by_entry(entry_id):
+    ''' get comments referring to the entry '''
+    
+    c = conn.cursor()
+    
+    c.execute(
+        """
+        select id, entry_id, name, email, content, comment_time, url
+        from comment
+        where entry_id = ?
+        order by comment_time asc
+        """, (entry_id, ))
+
+    all_data = c.fetchall()
+    r = [_raw_data_to_comment_dict(raw_entry) for raw_entry in all_data]
+            
+    conn.commit()
+    c.close()
+    return r
+
 def create_entry(entry):
-    ''' insert an entry into table '''
+    ''' insert an entry (blog) into table '''
     
     c = conn.cursor()
     c.execute(
@@ -113,12 +222,26 @@ def _raw_data_to_entry_dict(raw_data):
         category = raw_data[2],
         create_time = time.strptime(raw_data[3], '%Y-%m-%d %H:%M:%S'),
         content = raw_data[4])
+
+def _raw_data_to_comment_dict(raw_data):
+    ''' convert raw data (row) return from sqlite3 call to comment (dict) '''
+    
+    return dict(
+        id = raw_data[0],
+        entry_id = raw_data[1],
+        name = raw_data[2],
+        email = raw_data[3],
+        content = raw_data[4],
+        comment_time = time.strptime(raw_data[5], '%Y-%m-%d %H:%M:%S'),
+        url = raw_data[6],
+        )
+        
     
 def get_entry(entry_id):
     ''' get an entry by id '''
     
     c = conn.cursor()
-    c.execute("""select id, title, category, create_time, content from entry where id = {0}""".format(entry_id));
+    c.execute("""select id, title, category, create_time, content from entry where id = ?""", (entry_id, ));
     
     # if the entry didn't exist, return false 
     
@@ -388,3 +511,6 @@ if False == _table_is_exist('entry'):
     
 if False == _table_is_exist('siteinfo'):
     _create_table_siteinfo()
+    
+if False == _table_is_exist('comment'):
+    _create_table_comment()

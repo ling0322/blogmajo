@@ -1,1 +1,31 @@
 {% module BlogEntry(entry) %}
+<div id="comments-wrap">
+  {% module Comments(entry['id']) %}
+  <div id="respond">
+    <h3>Leave a Reply</h3>
+    <form action="/comment" method="post" id="commentform">
+      {% if current_user == None %}
+	  <p>
+	    <input type="text" name="author" id="author" value="" size="28" tabindex="1" />
+	    <label for="author">Name</label> (required)	
+	  </p>
+	  <p>
+	    <input type="text" name="email" id="email" value="" size="28" tabindex="2"  />
+	    <label for="email">E-mail</label>
+      </p>
+	  <p>
+	    <input type="text" name="url" id="url" value="" size="28" tabindex="3"  />
+	    <label for="url">Website</label>
+	  </p>
+	  {% end %}
+	  <p>
+	    <textarea name="comment" id="comment" cols="60" rows="10" tabindex="4" ></textarea>
+	  </p>
+	  <p>
+	    <input name="submit" id="submit" type="submit" tabindex="5" value="submit" />
+	    <input type="hidden" name="entry_id" value="{{ entry['id'] }}" id="entry_id" />
+	  </p>
+    </form>
+    <div style="clear:both;"></div>
+  </div>
+</div>

@@ -5,9 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   
   <title>{{ blogtitle }}</title>
-  
   <link rel="stylesheet" href="/static/style.css" type="text/css" media="screen" />
-
   <style type="text/css">
       #content-head {
           background:url(/static/default_header.jpg) no-repeat 90% 90%;
@@ -42,6 +40,12 @@
         <h3>Recent Posts</h3>
         <ul>
           {% module RecentPostsList() %}
+        </ul>
+      </li>
+      <li class="widget widget_categories">
+        <h3>Recent Comments</h3>
+        <ul>
+          {% module CommentsList() %}
         </ul>
       </li>
       <li id="archives-2" class="widget widget_archive">

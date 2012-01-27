@@ -1,0 +1,7 @@
+{% for comment in recent_comments %}
+<li>
+  <a href="/blog/{{ comment['entry_id'] }}#comment-{{ comment['id'] }}">
+    {{ comment['name'] }} at {{ _get_time_str(comment['comment_time']) }}
+  </a>
+</li>
+{% end %}

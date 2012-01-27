@@ -86,9 +86,55 @@ class LinksList(tornado.web.UIModule):
     convert the bbcode([url] tag) to html
     '''
     def render(self):
-        bbcode_func = bbcode.bbcode().bb2html
-        links_str = meidodb.get_siteinfo('links', '')
-        l = ['<li class="page_item">{0}</li>'.format(bbcode_func(link))
-             for link in links_str.split('\n')]
-        return ''.join(l)  
-    
+        try:
+            links_str = meidodb.get_siteinfo('links', '')
+            l = ['<li class="page_item"><a href="{0}">{1}</a></li>'.format(*link.split(','))
+                for link in links_str.split('\n')]
+            return ''.join(l)  
+        except:
+            return ''
+
+class CommentsList(tornado.web.UIModule):
+    ''' 
+    the links list displayed in the index
+    convert the bbcode([url] tag) to html
+    '''
+    def render(self):
+        recent_comments = meidodb.get_recent_comments(10)
+        
+        def _get_time_str(t):
+            
+            # if at the same year, just neglect year in return string
+            
+            if t[0] == time.gmtime()[0]:
+                return time.strftime("%b %d", t)
+            else:
+                return time.strftime("%b %d, %Y", t)
+            
+        return self.render_string(
+            'commentlist.html',
+            _get_time_str = _get_time_str,
+            recent_comments = recent_comments)
+        
+
+class Comments(tornado.web.UIModule):
+    ''' comments in entry page '''
+
+    def render(self, entry_id):
+        comments = meidodb.get_comment_by_entry(entry_id)
+        if 0 == len(comments):
+            return '<p class="nocomments">No Comments.</p>'
+        else:
+            count = 1
+            render_str_list = []
+            for comment in comments:
+                render_str_list.append(self.render_string(
+                    'comment.html',
+                    comment = comment,
+                    time = time.strftime('%B %d, %Y at %I:%M %p', comment['comment_time']),
+                    floor = count))
+                count = count + 1
+            entry = meidodb.get_entry(entry_id)
+            h3_str = '<h3 id="comments-wrap">{0} Comments to "{1}"</h3>'.format(len(render_str_list), entry['title'])
+            return h3_str + '<ol class="commentlist">' + ''.join(render_str_list) + '</ol>'
+
