@@ -22,8 +22,6 @@ class BlogEntry(tornado.web.UIModule):
         return base64.urlsafe_b64encode(original_str)
     
     def render(self, blog):
-        bbcode_conv = bbcode.bbcode()
-        blog['content'] = bbcode_conv.bb2html(blog['content'])
         blog['base64-category'] = self.base64_encode(blog['category'])
         author = meidodb.get_siteinfo('username')
         comments_count = len(meidodb.get_comment_by_entry(blog['id']))

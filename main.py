@@ -66,7 +66,7 @@ class HomePage(MeidoBaseHandler):
         # if the database hasn't initialized go to siteinfo page first
         
         if None == meidodb.get_siteinfo('password'):
-            self.redirect('/siteinfo')
+            self.redirect('/blog-admin/siteinfo')
             return
             
         bloglist = meidodb.select_entries(page)
