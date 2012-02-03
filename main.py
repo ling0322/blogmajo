@@ -16,6 +16,7 @@ import meidodb
 import base64
 import hashlib
 import uuid
+import platform
 
 class MeidoBaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
@@ -24,7 +25,20 @@ class MeidoBaseHandler(tornado.web.RequestHandler):
         else:
             return self.get_secure_cookie("user")
     
-    def _meido_render(self, content_type, kwargs):
+    def _majo_background_render(self, template_name, **kwargs):
+        ''' render a background page '''
+
+        title = meidodb.get_siteinfo('title', '')
+        description = meidodb.get_siteinfo('description', '')
+        
+        self.render(
+            'majo-background.html', 
+            blogtitle = title, 
+            description = description, 
+            content_type = template_name,
+            kwargs = kwargs)        
+    
+    def _meido_render(self, content_type, **kwargs):
         ''' render a page that in the frame of blogmeido '''
         
         # get site information
@@ -36,7 +50,7 @@ class MeidoBaseHandler(tornado.web.RequestHandler):
             'index.html', 
             blogtitle = title, 
             description = description, 
-            content_type = content_type, 
+            content_type = content_type,
             kwargs = kwargs)
 
 class HomePage(MeidoBaseHandler):
@@ -58,12 +72,11 @@ class HomePage(MeidoBaseHandler):
         bloglist = meidodb.select_entries(page)
         self._meido_render(
             content_type = 'bloglist', 
-            kwargs = dict(
-                blogentries = bloglist, 
-                pages_max = pages_max, 
-                page = page,
-                category = None,
-                post_date = None))
+            blogentries = bloglist, 
+            pages_max = pages_max, 
+            page = page,
+            category = None,
+            post_date = None)
 
 class Category(MeidoBaseHandler):
     ''' display entries of a certain category '''
@@ -83,12 +96,11 @@ class Category(MeidoBaseHandler):
         bloglist = meidodb.select_entries_by_category(page, category)
         self._meido_render(
             content_type = 'bloglist', 
-            kwargs = dict(
-                blogentries = bloglist, 
-                pages_max = pages_max, 
-                page = page,
-                category = category,
-                post_date = None))
+            blogentries = bloglist, 
+            pages_max = pages_max, 
+            page = page,
+            category = category,
+            post_date = None)
 
 class Archive(MeidoBaseHandler):
     ''' display archive of entries in one month '''
@@ -106,12 +118,11 @@ class Archive(MeidoBaseHandler):
         bloglist = meidodb.select_entries_by_archive(page, archive)
         self._meido_render(
             content_type = 'bloglist',
-            kwargs = dict(
-                blogentries = bloglist,
-                pages_max = pages_max,
-                page = page,
-                category = None,
-                post_date = time.strftime('%B %Y', time.strptime(archive, '%Y%m'))))
+            blogentries = bloglist,
+            pages_max = pages_max,
+            page = page,
+            category = None,
+            post_date = time.strftime('%B %Y', time.strptime(archive, '%Y%m')))
 
         
 
@@ -127,7 +138,7 @@ class Blog(MeidoBaseHandler):
             
         self._meido_render(
             content_type = 'entry', 
-            kwargs = dict(entry = entry))
+            entry = entry)
 
 class Message(MeidoBaseHandler):
     ''' a page that display some messages '''
@@ -136,7 +147,7 @@ class Message(MeidoBaseHandler):
         message = self.get_argument('m')
         self._meido_render(
             content_type = 'message', 
-            kwargs = dict(message = message))        
+            message = message)   
 
 class Login(MeidoBaseHandler):
     ''' login page '''
@@ -146,9 +157,9 @@ class Login(MeidoBaseHandler):
         # if login success go to the page specified by next
         
         next_url = self.get_argument('next', '/')
-        self._meido_render(
-            content_type = 'login', 
-            kwargs = dict(next = next_url))
+        self._majo_background_render(
+            template_name = 'login', 
+            next = next_url)
         
         
     def post(self):
@@ -225,14 +236,13 @@ class Modify(MeidoBaseHandler):
             
             # craete a new entry
             
-            self._meido_render(
-                content_type = 'compose', 
-                kwargs = dict(
-                    header_message = 'Compose a new blog ...',
-                    title = '',
-                    category = '',
-                    content = '',
-                    post_id = -1))
+            self._majo_background_render(
+                template_name = 'compose', 
+                header_message = 'Compose a new blog ...',
+                title = '',
+                category = '',
+                content = '',
+                post_id = -1)
         
         elif self.get_argument('q') == 'modify':
             
@@ -241,14 +251,13 @@ class Modify(MeidoBaseHandler):
             entry_id = int(self.get_argument('id'))
             entry = meidodb.get_entry(entry_id)
             
-            self._meido_render(
-                content_type = 'compose', 
-                kwargs = dict(
-                    header_message = 'Modify an exist blog ...',
-                    title = entry['title'],
-                    category = entry['category'],
-                    content = entry['content'],
-                    post_id = entry_id))            
+            self._majo_background_render(
+                template_name = 'compose', 
+                header_message = 'Modify an exist blog ...',
+                title = entry['title'],
+                category = entry['category'],
+                content = entry['content'],
+                post_id = entry_id)           
     
     @tornado.web.authenticated
     def post(self):
@@ -306,14 +315,13 @@ class SiteInfo(MeidoBaseHandler):
         else:
             password = '-do-not-change-'
         
-        self._meido_render(
-            content_type = 'siteinfo', 
-            kwargs = dict(
-                title = title,
-                description = description,
-                username = username,
-                links = links,
-                password = password))  
+        self._majo_background_render(
+            template_name = 'siteinfo', 
+            title = title,
+            description = description,
+            username = username,
+            links = links,
+            password = password)
     
     @tornado.web.authenticated
     def post(self):
@@ -363,13 +371,12 @@ class Remove(MeidoBaseHandler):
         next_page = self.get_argument('next')
         
         
-        self._meido_render(
-            content_type = 'remove', 
-            kwargs = dict(
-                type = self.get_argument('type'),
-                item = item,
-                id = id,
-                next = next_page))
+        self._majo_background_render(
+            template_name = 'remove', 
+            type = self.get_argument('type'),
+            item = item,
+            id = id,
+            next = next_page)
         
     @tornado.web.authenticated
     def post(self):
@@ -389,7 +396,23 @@ class Remove(MeidoBaseHandler):
         else:
             self.redirect(escape.url_unescape(next_page))
         
-        
+class Dashboard(MeidoBaseHandler):
+    ''' change the site info '''
+    
+    @tornado.web.authenticated
+    def get(self):
+        entries_count = meidodb.entries_count()
+        categories_count = meidodb.categories_count()
+        comments_count = meidodb.comments_count()
+        python_version = platform.python_version()
+        tornado_version = tornado.version
+        self._majo_background_render(
+            'background-home',
+            entries_count = entries_count,
+            categories_count = categories_count,
+            comments_count = comments_count,
+            python_version = python_version,
+            tornado_version = tornado_version)
 
 # create a random cookie secret
 
@@ -401,7 +424,7 @@ settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static"),
     "template_path": os.path.join(os.path.dirname(__file__), "templates"),
     "cookie_secret": cookie_secret,
-    "login_url": "/login",
+    "login_url": "/blog-admin/login",
 }
 
 application = tornado.web.Application([
@@ -409,13 +432,14 @@ application = tornado.web.Application([
     (r"/blog/([0-9]+)", Blog),
     (r"/category/(.+)", Category),
     (r"/archive/([0-9]+)", Archive),
-    (r"/modify", Modify),
+    (r"/blog-admin/modify", Modify),
     (r"/message", Message),
-    (r"/remove", Remove),
-    (r"/login", Login),
-    (r"/logout", Logout),
+    (r"/blog-admin/remove", Remove),
+    (r"/blog-admin/login", Login),
+    (r"/blog-admin/logout", Logout),
     (r"/comment", Comment),
-    (r"/siteinfo", SiteInfo),
+    (r"/blog-admin/home", Dashboard),
+    (r"/blog-admin/siteinfo", SiteInfo),
     (r"/static/(.+)", tornado.web.StaticFileHandler, dict(path=settings['static_path'])),
 ], **settings)
 

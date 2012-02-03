@@ -1,0 +1,38 @@
+    <div id="sidebar">
+      <li id="recent-posts-2" class="widget widget_recent_entries">
+        <h3>Recent Posts</h3>
+        <ul>
+          {% module RecentPostsList() %}
+        </ul>
+      </li>
+      <li class="widget widget_categories">
+        <h3>Recent Comments</h3>
+        <ul>
+          {% module CommentsList() %}
+        </ul>
+      </li>
+      <li id="archives-2" class="widget widget_archive">
+        <h3>Archives</h3>
+        <ul>
+          {% module ArchivesList() %}
+        </ul>
+      </li>
+      <li id="categories-2" class="widget widget_categories">
+        <h3>Categories</h3>
+        <ul>
+          {% module CategoriesList() %}
+        </ul>
+      </li>
+      <li id="meta-2" class="widget widget_meta">
+        <h3>Meta</h3>      
+        <ul>
+          {% if current_user == None %}
+          <li><a href="/blog-admin/login">Login</a></li>
+          {% else %}
+          <li><a href="/blog-admin/modify?q=compose">Create a new Blog</a></li>
+          <li><a href="/blog-admin/siteinfo">Site Informations</a></li>
+          <li><a href="/blog-admin/logout">Logout</a></li>
+          {% end %}
+        </ul>
+      </li>
+    </div>

@@ -10,7 +10,7 @@ import base64
 import time
 
 class Content(tornado.web.UIModule):
-    def render(self, content_type, kwargs):
+    def render(self, content_type, **kwargs):
         return self.render_string(content_type + '.html', **kwargs)
 
 class BlogEntry(tornado.web.UIModule):
@@ -79,7 +79,6 @@ class CategoryOptions(tornado.web.UIModule):
                 l.append('<option selected="selected">' + category['category'] + '</option>')
             else:
                 l.append('<option>' + category['category'] + '</option>')
-        
         return ''.join(l)
     
 class LinksList(tornado.web.UIModule):
@@ -117,7 +116,7 @@ class CommentsList(tornado.web.UIModule):
             'commentlist.html',
             _get_time_str = _get_time_str,
             recent_comments = recent_comments)
-        
+   
 
 class Comments(tornado.web.UIModule):
     ''' comments in entry page '''

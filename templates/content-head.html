@@ -1,0 +1,13 @@
+<div id="content-head">
+  <div id="headerimg">
+    <h1 class="blog-title"><a href="/">{{ blogtitle }}</a></h1>    
+    <div class="description">{{ description }}</div>
+  </div>
+  <ul id="nav">
+  {% if background == True %}
+  {% module Content('background-links', blogtitle = blogtitle) %}
+  {% else %}
+  {% module LinksList() %}
+  {% end %}
+  </ul>
+</div>

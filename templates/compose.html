@@ -4,15 +4,26 @@
   <p><input type="text" name="title" id="title" value="{{ title }}" size="28" tabindex="4"></p>
   <p><label>Category</label></p>
   <p>
-    <select name="category">
+    <select name="category" id="category" onchange="javascript: category_changed();">
       {% module CategoryOptions(category) %}
+      <option>Create a new category ...</option>
     </select>
-    <label>or create a new</label><input type="text" id="category-new" name="category-new" value="" size="28" tabindex="4">
   </p>
-  <p><label>Content - (BBCode is enabled)</label></p>
-  <p><textarea name="entry-content" id="entry-content" cols="60" rows="10" tabindex="4">{{ content }}</textarea></p>
+  <div id="new-category">
+    <p>
+      <label>New category name</label>
+    </p>
+    <p>
+      <input type="text" id="category-new" name="category-new" value="" size="28" tabindex="4">
+    </p>
+  </div>
+  <p><label>Content</label></p>
+  <div id="compose-container"><textarea name="entry-content" id="entry-content" cols="60" rows="10" tabindex="4">{{ content }}</textarea></div>
   <p>
     <input name="submit" id="submit" type="submit" tabindex="5" value="submit">
     <input type="hidden" name="post-id" value="{{ post_id }}" id="post-id">
   </p>
 </form>
+<script type="text/javascript">
+	CKEDITOR.replace('entry-content');
+</script>

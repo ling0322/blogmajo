@@ -8,6 +8,13 @@ Author URI: http://www.pixelstudio.ro/
 Tags: blue, silver, custom-header, fixed-width, two-columns, theme-options, light, custom-colors
 */
 
+#content-head {
+    background:url(/static/default_header.jpg) no-repeat 90% 90%;
+    position: relative;
+    padding:0px;
+    height:170px;
+}
+
 /*--------------------General Classes---------------*/
 body {
 	background: #ffffff url("body.jpg") repeat-x top left;
@@ -197,6 +204,17 @@ img[align="left"] {
     max-width: 100%;
 }
 
+#background-content {
+	padding: 10px 15px 20px 10px;
+	float: left;
+	min-height: 400px;
+	overflow: hidden;
+	margin:10px 0px 10px 0px;
+}
+
+#background-content img {
+    max-width: 100%;
+}
 
 .post {
 	clear:both;
@@ -644,7 +662,9 @@ h4, h4 a, h4 a:visited {
 /*-------------------------- modified by @ling0322 ----------------*/
 
 
-
+#new-category {
+    display: none;
+}
 
 #composeform {
 	margin-top: 10px;
@@ -660,20 +680,16 @@ h4, h4 a, h4 a:visited {
 	font-size: 100%;
 }
 #composeform input{
-	width: 100%;
-	background:#fff;
+	width: 360px;
+	background:#f2f2f2;
 	border: 1px solid #d0d0d0;
 	padding: 3px;
 	margin-top: 3px;
 }
 
-#composeform textarea{
-	width: 100%;
-	height: 240px;
-	background:#fff;
-	border: 1px solid #d0d0d0;
-	padding: 3px;
-	margin-top: 3px;
+#compose-container{
+    width: 640px;
+	background: #fff;
 }
 
 #composeform #submit{
@@ -688,18 +704,17 @@ h4, h4 a, h4 a:visited {
 
 #composeform select{
 	width: 160px;
-	background:#fff;
+	background:#f2f2f2;
+	border: 1px solid #d0d0d0;
 	padding: 1px;
 	margin-top: 3px;
 }
 
 #composeform #category-new{
 	width: 120px;
-	background:#fff;
+	background:#f2f2f2;
 	border: 1px solid #d0d0d0;
 	padding: 3px;
-	margin-top: 3px;
-	margin-left: 5px;
 }
 
 

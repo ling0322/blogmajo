@@ -12,8 +12,8 @@
         <a href="/category/{{ blog['base64-category'] }}" rel="category">{{ blog['category'] }}</a>
       </span>
       {% if current_user != None %}
-       | <a href="/remove?type=entry&id={{ blog['id'] }}&next={{ url_escape(request.uri) }}" rel="category"> Remove </a>
-       | <a href="/modify?q=modify&id={{ blog['id'] }}"> Modify </a>
+       | <a href="/blog-admin/remove?type=entry&id={{ blog['id'] }}&next={{ url_escape(request.uri) }}" rel="category"> Remove </a>
+       | <a href="/blog-admin/modify?q=modify&id={{ blog['id'] }}"> Modify </a>
       {% end %}
       {% if comments_count == 0 %}
        | No Comments

@@ -490,10 +490,65 @@ def set_siteinfo(info_key, info_value):
             where key = ?
             """, (info_value, info_key))          
         
+
+def entries_count():
+    ''' 
+    get the count of entries
+    '''
+
+    c = conn.cursor()
+    c.execute(
+        """
+        select count(*)
+        from entry
+        """)
+    
+    all_data = c.fetchall()
+    r = all_data[0][0]
     
     conn.commit()
     c.close()
+    return r 
+
+def categories_count():
+    ''' 
+    get the count of categories
+    '''
+
+    c = conn.cursor()
+    c.execute(
+        """
+        select count(category)
+        from entry 
+        group by category
+        """)
     
+    all_data = c.fetchall()
+    r = all_data[0][0]
+    
+    conn.commit()
+    c.close()
+    return r 
+
+def comments_count():
+    ''' 
+    get the count of categories
+    '''
+
+    c = conn.cursor()
+    c.execute(
+        """
+        select count(*)
+        from comment
+        """)
+    
+    all_data = c.fetchall()
+    r = all_data[0][0]
+    
+    conn.commit()
+    c.close()
+    return r 
+
 ENTRIES_PER_PAGE = 10
 conn = sqlite3.connect('entriesdb')
 
