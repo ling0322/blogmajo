@@ -5,7 +5,6 @@ Created on 2012-1-11
 '''
 import tornado.web
 import meidodb
-import bbcode
 import base64
 import time
 

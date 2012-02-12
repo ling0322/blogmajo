@@ -1,0 +1,20 @@
+<h2>File Uploader</h2>
+{% for message in messages %}
+<p>
+  Upload {{ message['filename'] }} as 
+  <a href="{{ 'http://' + request.host + '/static/upload/' + url_escape(message['filename']) }}">
+    {{ 'http://' + request.host + '/static/upload/' + url_escape(message['filename']) }}
+  </a>
+  {% if message['success'] == True %}
+  <span class="upload-success">&nbsp; ... Success</span>
+  {% else %}
+  <span class="upload-failed">&nbsp; ... Failed</span>
+  {% end %}
+</p>
+{% end %}
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<form class="majo-form" action="upload" enctype="multipart/form-data" method=post> 
+  <p><input type="file" name="filename" /></p>
+  <p><input type="submit" class="majo-button" value="Upload" /></p>
+</form> 

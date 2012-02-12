@@ -395,7 +395,38 @@ class Remove(MeidoBaseHandler):
             self.redirect('/')
         else:
             self.redirect(escape.url_unescape(next_page))
+            
+class Uploader(MeidoBaseHandler): 
+    ''' upload a file '''
+    
+    @tornado.web.authenticated
+    def get(self):
+        messages = escape.json_decode(escape.url_unescape(self.get_argument('message', '[]')))
+        self._majo_background_render(
+            'uploader',
+            messages = messages)
         
+    @tornado.web.authenticated
+    def post(self):
+        message_list = []
+        for file in self.request.files['filename']:
+            try:
+                
+                # check if the file is exist
+                path = self.settings['static_path'] + '/upload/' + file['filename']
+                if os.path.exists(path):
+                    raise 'File already exists'
+                fp = open(path, 'w')
+                fp.write(file['body'])
+                fp.close()
+                message_list.append(dict(filename = file['filename'], success = True))
+            except:
+                print sys.exc_info()
+                message_list.append(dict(filename = file['filename'], success = False))
+        self.redirect('upload?message=' + escape.url_escape(escape.json_encode(message_list)))
+        
+            
+                
 class Dashboard(MeidoBaseHandler):
     ''' change the site info '''
     
@@ -438,6 +469,7 @@ application = tornado.web.Application([
     (r"/blog-admin/login", Login),
     (r"/blog-admin/logout", Logout),
     (r"/comment", Comment),
+    (r"/blog-admin/upload", Uploader),
     (r"/blog-admin/home", Dashboard),
     (r"/blog-admin/siteinfo", SiteInfo),
     (r"/static/(.+)", tornado.web.StaticFileHandler, dict(path=settings['static_path'])),

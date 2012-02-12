@@ -771,3 +771,35 @@ h4, h4 a, h4 a:visited {
 	height: 29px;
 	color: #666666;
 }
+
+/*------------------------------ other ------------------*/
+.majo-button {
+	font: bold 12px Arial, Helvetica, sans-serif;
+	border: 1px solid #d0d0d0;
+	background:#fff;
+	float:left;
+	width: 144px;
+	height: 29px;
+	color: #666666;
+}
+
+
+/*---------------------- upload ---------------------*/
+.upload-success {
+    color: green;
+}
+
+.upload-failed {
+    color: red;
+}
+
+.majo-form p {
+	padding: 6px 0px;
+	margin: 0px;
+}
+
+.majo-form label{
+	font-weight: bold;
+	color: #666666;
+	font-size: 100%;
+}
